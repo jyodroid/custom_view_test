@@ -8,29 +8,28 @@
 
     <TextView
         android:id="@+id/customViewLabel"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textColor="@android:color/black"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:padding="16dp"
         android:text="@string/fan_control"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display3"
+        android:textColor="@android:color/black"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/dialView"
+    <com.example.canvas.DialView
+        android:id="@+id/dial_view"
         android:layout_width="@dimen/view_size"
         android:layout_height="@dimen/view_size"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintTop_toBottomOf="@+id/customViewLabel"
+        android:layout_marginLeft="@dimen/view_margin"
+        android:layout_marginTop="@dimen/view_margin"
+        android:layout_marginRight="@dimen/view_margin"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="@dimen/view_margin"
-        android:layout_marginRight="@dimen/view_margin"
-        android:layout_marginTop="@dimen/view_margin"/>
+        app:layout_constraintTop_toBottomOf="@+id/customViewLabel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

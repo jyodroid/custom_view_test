@@ -1,4 +1,4 @@
-package com.example.poc_canvas
+package com.example.canvas
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
