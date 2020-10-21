@@ -10,4 +10,8 @@
     <color name="fan_color_1">#FFEB3B</color>
     <color name="fan_color_2">#CDDC39</color>
     <color name="fan_color_3">#009688</color>
+
+    <color name="colorBackground">#FFFF5500</color>
+    <color name="colorPaint">#FFFFEB3B</color>
+    
 </resources>
