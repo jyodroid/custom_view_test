@@ -28,6 +28,9 @@
         android:layout_marginLeft="@dimen/view_margin"
         android:layout_marginTop="@dimen/view_margin"
         android:layout_marginRight="@dimen/view_margin"
+        app:fanColor1="@color/fan_color_1"
+        app:fanColor2="@color/fan_color_2"
+        app:fanColor3="@color/fan_color_3"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/customViewLabel" />

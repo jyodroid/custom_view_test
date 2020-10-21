@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.withStyledAttributes
+import com.example.canvas.FanSpeed.*
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -21,7 +23,36 @@ class DialView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     private var radius = 0.0f   //Radius of the circle
-    private var fanSpeed = FanSpeed.OFF //The active selection
+    private var fanSpeed = OFF //The active selection
+
+    private var fansSpeedLowColor = 0
+    private var fansSpeedMediumColor = 0
+    private var fansSpeedMaxColor = 0
+
+
+    init {
+        //In order to use custom view attributes, we need to obtain them
+        context.withStyledAttributes(attrs, R.styleable.DialView) {
+            fansSpeedLowColor = getColor(R.styleable.DialView_fanColor1, 0)
+            fansSpeedMediumColor = getColor(R.styleable.DialView_fanColor2, 0)
+            fansSpeedMaxColor = getColor(R.styleable.DialView_fanColor3, 0)
+        }
+
+        isClickable = true
+    }
+
+    /**
+     * The default on perform click also calls `onClickListener()` so actions can be added here
+     */
+    override fun performClick(): Boolean {
+        if (super.performClick()) return true //must happen first, enables accessibility events as well calls onClickListener()
+
+        fanSpeed = fanSpeed.next()
+        contentDescription = resources.getString(fanSpeed.label)
+
+        invalidate() //Force onDraw again
+        return true
+    }
 
     //Possible variable which will be used to draw label and indicator circle position
     private val pointPosition = PointF(0.0f, 0.0f)
@@ -46,7 +77,12 @@ class DialView @JvmOverloads constructor(
      */
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        paint.color = if (fanSpeed == FanSpeed.OFF) Color.GRAY else Color.GREEN
+        paint.color = when (fanSpeed) {
+            OFF -> Color.GRAY
+            LOW -> fansSpeedLowColor
+            MEDIUM -> fansSpeedMediumColor
+            HIGH -> fansSpeedMaxColor
+        }
 
         // With and height are part of the view superclass and indicates the current dimension
         // of the view
@@ -62,7 +98,7 @@ class DialView @JvmOverloads constructor(
 
         // To draw the labels we reuse the pointPosition so avoid allocations
         val labelRadius = radius + RADIUS_OFFSET_LABEL
-        FanSpeed.values().forEach { speed ->
+        values().forEach { speed ->
             pointPosition.computeXYForSpeed(speed, labelRadius)
             val label = resources.getString(speed.label)
             canvas?.drawText(label, pointPosition.x, pointPosition.y, paint)
@@ -74,9 +110,9 @@ class DialView @JvmOverloads constructor(
      * view fits into the layout
      * https://developer.android.com/guide/topics/ui/custom-components.html#compound
      */
-//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-//    }
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    }
 
     /**
      * Calculates x and y positions on the screen for the texts label given the current fan speed
@@ -95,6 +131,13 @@ private enum class FanSpeed(val label: Int) {
     LOW(R.string.fan_low),
     MEDIUM(R.string.fan_medium),
     HIGH(R.string.fan_high);
+
+    fun next() = when (this) {
+        OFF -> LOW
+        LOW -> MEDIUM
+        MEDIUM -> HIGH
+        HIGH -> OFF
+    }
 }
 
 private const val RADIUS_OFFSET_LABEL = 30
