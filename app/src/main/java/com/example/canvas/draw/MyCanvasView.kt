@@ -12,9 +12,18 @@ import kotlin.math.abs
 class MyCanvasView(context: Context) : View(context) {
     private lateinit var frame: Rect
 
-    private lateinit var extraCanvas: Canvas
-    private var extraBitmap: Bitmap? = null
-    private var path = Path()
+    //These two variables are used to store the drawing
+//    private lateinit var extraCanvas: Canvas
+//    private var extraBitmap: Bitmap? = null
+
+    //I do prefer to store the shape as is
+    // Path representing the drawing so far
+    private val drawing = Path()
+
+    // Path representing what's currently being drawn
+//    private val curPath = Path()
+
+    private var currentPath = Path()
 
     //Attributes
     private val backgroundColor =
@@ -73,14 +82,14 @@ class MyCanvasView(context: Context) : View(context) {
      */
     override fun onSizeChanged(width: Int, heigth: Int, oldWidth: Int, oldHeigth: Int) {
         super.onSizeChanged(width, heigth, oldWidth, oldHeigth)
-        extraBitmap?.recycle() // Avoid memory leaks since a bitmap is created each time this method is called
+//        extraBitmap?.recycle() // Avoid memory leaks since a bitmap is created each time this method is called
 
         //Setup Canvas and Bitmap
         //ARGB_8888 -> bitmap color configuration, stores each color in 4 bytes
-        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        extraBitmap?.let {
-            extraCanvas = Canvas(it).also { canvas -> canvas.drawColor(backgroundColor) }
-        }
+//        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+//        extraBitmap?.let {
+//            extraCanvas = Canvas(it).also { canvas -> canvas.drawColor(backgroundColor) }
+//        }
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -88,16 +97,24 @@ class MyCanvasView(context: Context) : View(context) {
 
         //The canvas that is passed by the system is different than the one we created and use to
         // draw the bitmap
-        extraBitmap?.let {
-
-            // The 2D coordinates used to draw on canvas is in pixels and the origin (0,0) is at
-            // top left corner of the canvas
-            canvas?.drawBitmap(it, 0f, 0f, null)
-        }
+//        extraBitmap?.let {
+//
+//            // The 2D coordinates used to draw on canvas is in pixels and the origin (0,0) is at
+//            // top left corner of the canvas
+//            canvas?.drawBitmap(it, 0f, 0f, null)
+//        }
 
         val inset = 40
         frame = Rect(inset, inset, width - inset, height - inset)
         canvas?.apply {
+            drawColor(backgroundColor)
+            
+            //Draw the drawing so far
+            drawPath(drawing, paint)
+
+            //Draw any current squiggle
+            drawPath(currentPath, paint)
+
             drawRect(frame, framePaint)
             drawText("My Notes", width / 2f, inset + 60f, textPaint)
         }
@@ -128,8 +145,8 @@ class MyCanvasView(context: Context) : View(context) {
      * User first touches the screen
      */
     private fun touchStart() {
-        path.reset()
-        path.moveTo(motionTouchEventX, motionTouchEventY)
+        currentPath.reset()
+        currentPath.moveTo(motionTouchEventX, motionTouchEventY)
 
         currentX = motionTouchEventX
         currentY = motionTouchEventY
@@ -150,7 +167,7 @@ class MyCanvasView(context: Context) : View(context) {
         if (dx > touchTolerance || dy > touchTolerance) {
             // QuadTo() adds a quadratic bezier from the last point,
             // approaching control point (x1,y1), and ending at (x2,y2).
-            path.quadTo(
+            currentPath.quadTo(
                 currentX,
                 currentY,
                 (motionTouchEventX + currentX) / 2,
@@ -160,7 +177,7 @@ class MyCanvasView(context: Context) : View(context) {
             currentY = motionTouchEventY
 
             // Draw the path in the extra bitmap to cache it.
-            extraCanvas.drawPath(path, paint)
+//            extraCanvas.drawPath(path, paint)
         }
 
         //invalidate to force redraw
@@ -171,6 +188,9 @@ class MyCanvasView(context: Context) : View(context) {
      * User finish writing
      */
     private fun touchUp() {
-        path.reset()
+        // Add the current path to the drawing so far
+        drawing.addPath(currentPath)
+        // Rewind the current path for the next touch
+        currentPath.reset()
     }
 }
