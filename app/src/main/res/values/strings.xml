@@ -5,9 +5,12 @@
     <string name="fan_low">1</string>
     <string name="fan_medium">2</string>
     <string name="fan_high">3</string>
-    <string name="draw">draw</string>
 
+    <string name="draw">draw</string>
     <string name="canvasContentDescription">Mini paint is a simple drawing app. drag your fingers
         to draw. rotate your phone to clear</string>
 
+    <string name="clipping">Clipping</string>
+    <string name="translated">translated text</string>
+    <string name="skewed">"Skewed and "</string>
 </resources>

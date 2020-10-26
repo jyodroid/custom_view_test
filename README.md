@@ -16,6 +16,10 @@ with ***bitmap*** or save a history as ***coordinates and instructions***.
 ### Graphics interesting stuff
 - [Dithering](https://webstyleguide.com/wsg2/graphics/dither.html)
 - [quadratic bezier](https://www.sciencedirect.com/topics/engineering/quadratic-bezier-curve) or [Bézier curve](https://en.wikipedia.org/wiki/B%C3%A9zier_curve)
+####[Clipping](https://en.wikipedia.org/wiki/Clipping_(computer_graphics))
+- is a way to define regions of an image
+- selective drawn or not drawn on screen
+- reduce overdraw
 
 ### Sources
 - https://codelabs.developers.google.com/codelabs/advanced-andoid-kotlin-training-custom-views

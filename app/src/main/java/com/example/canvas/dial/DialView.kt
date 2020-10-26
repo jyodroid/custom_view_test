@@ -1,11 +1,12 @@
-package com.example.canvas
+package com.example.canvas.dial
 
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.withStyledAttributes
-import com.example.canvas.FanSpeed.*
+import com.example.canvas.R
+import com.example.canvas.dial.FanSpeed.*
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
