@@ -11,7 +11,7 @@
     <color name="fan_color_2">#CDDC39</color>
     <color name="fan_color_3">#009688</color>
 
-    <color name="colorBackground">#FFFF5500</color>
-    <color name="colorPaint">#FFFFEB3B</color>
+    <color name="colorBackground">#00BCD4</color>
+    <color name="colorPaint">#060730</color>
     
 </resources>

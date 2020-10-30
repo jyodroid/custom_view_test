@@ -108,7 +108,7 @@ class MyCanvasView(context: Context) : View(context) {
         frame = Rect(inset, inset, width - inset, height - inset)
         canvas?.apply {
             drawColor(backgroundColor)
-            
+
             //Draw the drawing so far
             drawPath(drawing, paint)
 
@@ -116,7 +116,7 @@ class MyCanvasView(context: Context) : View(context) {
             drawPath(currentPath, paint)
 
             drawRect(frame, framePaint)
-            drawText("My Notes", width / 2f, inset + 60f, textPaint)
+            drawText("Hubble App", width / 2f, inset + 60f, textPaint)
         }
     }
 

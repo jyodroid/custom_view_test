@@ -57,4 +57,14 @@
         app:layout_constraintEnd_toStartOf="@+id/draw_button"
         app:layout_constraintTop_toBottomOf="@+id/dial_view" />
 
+    <Button
+        android:id="@+id/find_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/view_margin"
+        android:layout_marginTop="@dimen/view_margin"
+        android:layout_marginRight="@dimen/view_margin"
+        android:text="@string/find_me"
+        app:layout_constraintEnd_toStartOf="@+id/clipping"
+        app:layout_constraintTop_toBottomOf="@+id/dial_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

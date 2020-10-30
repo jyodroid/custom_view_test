@@ -16,7 +16,11 @@ with ***bitmap*** or save a history as ***coordinates and instructions***.
 ### Graphics interesting stuff
 - [Dithering](https://webstyleguide.com/wsg2/graphics/dither.html)
 - [quadratic bezier](https://www.sciencedirect.com/topics/engineering/quadratic-bezier-curve) or [Bézier curve](https://en.wikipedia.org/wiki/B%C3%A9zier_curve)
-####[Clipping](https://en.wikipedia.org/wiki/Clipping_(computer_graphics))
+- [Shading](https://en.wikipedia.org/wiki/Shading) and [Shader in Android](https://developer.android.com/reference/android/graphics/Shader)
+- [Android Blending Modes](https://developer.android.com/reference/android/graphics/PorterDuff.Mode.html#blending-modes)
+- [Android Alpha Composing modes](https://developer.android.com/reference/android/graphics/PorterDuff.Mode.html#alpha-compositing-modes)
+
+#### [Clipping](https://en.wikipedia.org/wiki/Clipping_(computer_graphics))
 - is a way to define regions of an image
 - selective drawn or not drawn on screen
 - reduce overdraw
@@ -24,3 +28,5 @@ with ***bitmap*** or save a history as ***coordinates and instructions***.
 ### Sources
 - https://codelabs.developers.google.com/codelabs/advanced-andoid-kotlin-training-custom-views
 - https://codelabs.developers.google.com/codelabs/advanced-android-kotlin-training-canvas
+- https://codelabs.developers.google.com/codelabs/advanced-android-kotlin-training-clipping-canvas-objects
+- https://codelabs.developers.google.com/codelabs/advanced-android-kotlin-training-shaders
