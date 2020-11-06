@@ -21,8 +21,6 @@ class MyCanvasView(context: Context) : View(context) {
     private val drawing = Path()
 
     // Path representing what's currently being drawn
-//    private val curPath = Path()
-
     private var currentPath = Path()
 
     //Attributes

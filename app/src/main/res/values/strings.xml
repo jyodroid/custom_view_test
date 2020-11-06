@@ -23,5 +23,6 @@
        \t \u2022 Once you find the Android, lift your finger to end the game. \n \n
        \t \u2022 To restart the game touch the screen again.
    </string>
+    <string name="pdf">PDF</string>
 
 </resources>

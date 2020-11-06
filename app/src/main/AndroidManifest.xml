@@ -12,13 +12,13 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".clipping.ClippingActivity" />
         <activity android:name=".draw.DrawActivity" />
         <activity android:name=".findme.FindMe" />
+        <activity android:name=".pdf.ActivityPdf" />
     </application>
 
 </manifest>
