@@ -4,12 +4,12 @@ import android.content.res.TypedArray
 import android.graphics.*
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.MotionEvent
-import android.view.ViewConfiguration
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.canvas.R
 import com.github.barteksc.pdfviewer.PDFView
 import com.github.barteksc.pdfviewer.listener.OnDrawListener
+import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
 import com.github.barteksc.pdfviewer.util.FitPolicy
@@ -19,6 +19,7 @@ import kotlin.math.abs
 
 private const val STROKE_WIDTH = 12f
 private const val DRAW_COLOR = Color.BLUE
+private const val PDF_FILE = "sample.pdf"
 
 class ActivityPdf : AppCompatActivity(), OnPageChangeListener, OnDrawListener {
     private val paint = Paint().apply {
@@ -35,35 +36,44 @@ class ActivityPdf : AppCompatActivity(), OnPageChangeListener, OnDrawListener {
 
     var pdfView: PDFView? = null
 
+    var drawMap = HashMap<Int, Bitmap>()
+
     private var currentX = 0f
     private var currentY = 0f
 
     private lateinit var extraCanvas: Canvas
     private var extraBitmap: Bitmap? = null
 
+    private var writeMode = false
+    private var excludedRect: RectF? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pdf)
         pdfView = findViewById(R.id.pdfView)
-        val pdfFile = "sample.pdf"
+        pdfView?.let { configurePdf(it) }
+    }
 
-        pdfView?.let {
-            it.fromAsset(pdfFile)
-                .onPageChange(this)
-                .enableAnnotationRendering(true)
-//            .onLoad(this)
-//                .enableSwipe(true)
-                .scrollHandle(DefaultScrollHandle(this))
-//                .spacing(10) // in dp
-                .onDraw(this)
-//            .onPageError(this)
-                .enableAnnotationRendering(true)
-                .pageFitPolicy(FitPolicy.BOTH)
-                .load()
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.pdf_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.write -> {
+                writeMode = !writeMode
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onPageChanged(page: Int, pageCount: Int) {
+        extraBitmap?.recycle()
+        extraBitmap = drawMap[page]
         pdfView?.let {
             Snackbar.make(it, "page ${page + 1}  of $pageCount", Snackbar.LENGTH_SHORT)
                 .show()
@@ -78,8 +88,23 @@ class ActivityPdf : AppCompatActivity(), OnPageChangeListener, OnDrawListener {
     ) {
         if (canvas == null) return
 
+        if (extraBitmap == null){
+            extraBitmap = Bitmap.createBitmap(pageWidth.toInt(), pageHeight.toInt(), Bitmap.Config.ARGB_8888)
+            extraBitmap?.let {
+                extraCanvas = Canvas(it)
+            }
+
+            excludedRect = RectF(
+                0f,
+                0f,
+                pageWidth,
+                calculateExtraHeight().toFloat()
+            )
+        }
+
         extraBitmap?.let {
             canvas.drawBitmap(it, 0f, 0f, null)
+            drawMap[displayedPage] = Bitmap.createBitmap(it)
         }
 
         val controlBitmap =
@@ -112,7 +137,7 @@ class ActivityPdf : AppCompatActivity(), OnPageChangeListener, OnDrawListener {
     private var motionTouchEventY = 0f
 
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
-        return if (event != null) {
+        return if (event != null && writeMode && excludedRect?.contains(event.x, event.y) != true) {
             motionTouchEventX = event.x
             motionTouchEventY = event.y - calculateExtraHeight()
 
@@ -171,16 +196,28 @@ class ActivityPdf : AppCompatActivity(), OnPageChangeListener, OnDrawListener {
         path.reset()
     }
 
-    override fun onResume() {
-        extraBitmap?.recycle()
-        val metrics: DisplayMetrics = resources.displayMetrics
-        val width = metrics.widthPixels
-        val height = metrics.heightPixels
-        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        extraBitmap?.let {
-            extraCanvas = Canvas(it)
-        }
-        super.onResume()
+    private fun configurePdf(pdfView: PDFView) {
+        pdfView.fromAsset(PDF_FILE)
+            .onPageChange(this)
+            .enableAnnotationRendering(true)
+//            .onLoad(this)
+//            .scrollHandle(DefaultScrollHandle(this))
+//                .spacing(10) // in dp
+            .onDraw(this)
+//            .onPageError(this)
+//            .onRender(onRenderListener) // called after document is rendered for the first time could help to initialize canvas state
+            .enableAnnotationRendering(true)
+            .pageFitPolicy(FitPolicy.BOTH)
+//            .enableSwipe(true) // allows to block changing pages using swipe
+//            .swipeHorizontal(true)//Add Extra space
+//            .pageFling(true)
+//            .fitEachPage(false)
+//            .pageSnap(true)//Add Extra space
+            .pageFling(true)
+//            .autoSpacing(true)
+//            .autoSpacing(true)//Add Extra space
+//            .fitEachPage(false)
+            .load()
     }
 
     private fun calculateExtraHeight(): Int {
